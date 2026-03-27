@@ -1,11 +1,12 @@
 import { Router, Request, Response } from "express";
 import { prisma } from "../utils/prisma";
 import { dashboardAuth } from "../middleware/auth";
+import { JsonValue } from '@prisma/client/runtime/library'
 
 
 interface EventRecord {
     eventType: string;
-    payload: Record<string, unknown>;
+    payload: JsonValue;
     createdAt: Date;
 }
 
