@@ -13,8 +13,6 @@ declare global {
     }
 }
 
-// Las instancias de Silver Star se autentican con su API key en el header
-// Header esperado: Authorization: Bearer <API_KEY>
 export async function tenantAuth(
     req: Request,
     res: Response,
@@ -29,18 +27,27 @@ export async function tenantAuth(
 
     const apiKey = authHeader.split(" ")[1];
 
-    const tenant = await prisma.tenant.findUnique({
-        where: { apiKey },
-        select: { id: true, name: true },
-    });
+    console.log('[tenantAuth] apiKey recibida:', apiKey)
 
-    if (!tenant) {
-        res.status(401).json({ error: "Invalid API key" });
-        return;
+    try {
+        const tenant = await prisma.tenant.findUnique({
+            where: { apiKey },
+            select: { id: true, name: true },
+        });
+
+        console.log('[tenantAuth] tenant encontrado:', tenant)
+
+        if (!tenant) {
+            res.status(401).json({ error: "Invalid API key" });
+            return;
+        }
+
+        req.tenant = tenant;
+        next();
+    } catch (error) {
+        console.log('[tenantAuth] Error de base de datos:', error)
+        res.status(500).json({ error: "Database error" });
     }
-
-    req.tenant = tenant;
-    next();
 }
 
 // El dashboard usa un JWT distinto — solo tú puedes acceder
