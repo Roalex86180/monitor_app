@@ -28,6 +28,8 @@ export async function tenantAuth(
     const apiKey = authHeader.split(" ")[1];
 
     console.log('[tenantAuth] apiKey recibida:', apiKey)
+    const allTenants = await prisma.tenant.findMany({ select: { id: true, apiKey: true } })
+    console.log('[tenantAuth] Todos los tenants:', JSON.stringify(allTenants))
 
     try {
         const tenant = await prisma.tenant.findUnique({
