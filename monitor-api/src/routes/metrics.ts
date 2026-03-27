@@ -159,7 +159,7 @@ router.get("/events/:tenantId", async (req: Request, res: Response) => {
         const events: EventRecord[] = await prisma.event.findMany({
             where: {
                 tenantId,
-                ...(eventType ? { eventType } : {}),
+                ...(eventType ? { eventType: { equals: eventType } } : {}),
             },
             orderBy: { createdAt: "desc" },
             take: limit,
