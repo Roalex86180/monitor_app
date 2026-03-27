@@ -153,7 +153,7 @@ router.get("/summary", async (_req: Request, res: Response) => {
 router.get("/events/:tenantId", async (req: Request, res: Response) => {
     const { tenantId } = req.params;
     const limit = Math.min(Number(req.query.limit) || 50, 200);
-    const eventType = req.query.type as string | undefined;
+    const eventType = typeof req.query.type === 'string' ? req.query.type : undefined;
 
     try {
         const events: EventRecord[] = await prisma.event.findMany({
