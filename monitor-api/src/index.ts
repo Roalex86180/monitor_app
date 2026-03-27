@@ -22,25 +22,7 @@ app.get("/health", (_req, res) => {
     res.json({ ok: true, ts: new Date().toISOString() });
 });
 
-// Endpoint temporal para crear el tenant — eliminar después
-app.post("/seed", async (_req, res) => {
-    try {
-        const tenant = await prisma.tenant.upsert({
-            where: { id: "tenant_silver_prod" },
-            update: {},
-            create: {
-                id: "tenant_silver_prod",
-                name: "Silver Star",
-                apiKey: "ss-prod-key-2024",
-                url: "https://proyecto-silver-2.onrender.com",
-                createdAt: new Date(),
-            },
-        });
-        res.json({ ok: true, tenant });
-    } catch (error: any) {
-        res.status(500).json({ error: error.message });
-    }
-});
+
 
 // ─── Rutas ──────────────────────────────────────────────────────────────────
 app.use("/track", trackRouter);       // POST /track — recibe eventos de Silver Star
