@@ -151,7 +151,7 @@ router.get("/summary", async (_req: Request, res: Response) => {
 // GET /metrics/events/:tenantId
 // Eventos recientes de un tenant específico — para la vista de detalle
 router.get("/events/:tenantId", async (req: Request, res: Response) => {
-    const { tenantId } = req.params;
+    const tenantId = req.params.tenantId as string;
     const limitRaw = typeof req.query.limit === 'string' ? req.query.limit : '50';
     const limit = Math.min(Number(limitRaw) || 50, 200);
     const eventType = typeof req.query.type === 'string' ? req.query.type : undefined;
