@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 
 const router = Router();
 
+
+
 // POST /auth/login
 // Solo tú puedes hacer login con la contraseña maestra del dashboard
 router.post("/login", (req: Request, res: Response) => {

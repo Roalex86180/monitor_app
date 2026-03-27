@@ -3,6 +3,7 @@ import cors from "cors";
 import trackRouter from "./routes/track";
 import metricsRouter from "./routes/metrics";
 import authRouter from "./routes/auth";
+import { prisma } from "./utils/prisma";
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -19,6 +20,26 @@ app.use(
 // ─── Health check — para Render y para el uptime ping de las instancias ────
 app.get("/health", (_req, res) => {
     res.json({ ok: true, ts: new Date().toISOString() });
+});
+
+// Endpoint temporal para crear el tenant — eliminar después
+app.post("/seed", async (_req, res) => {
+    try {
+        const tenant = await prisma.tenant.upsert({
+            where: { id: "tenant_silver_prod" },
+            update: {},
+            create: {
+                id: "tenant_silver_prod",
+                name: "Silver Star",
+                apiKey: "ss-prod-key-2024",
+                url: "https://proyecto-silver-2.onrender.com",
+                createdAt: new Date(),
+            },
+        });
+        res.json({ ok: true, tenant });
+    } catch (error: any) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 // ─── Rutas ──────────────────────────────────────────────────────────────────
